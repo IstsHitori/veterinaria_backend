@@ -1,4 +1,4 @@
-import { Token } from "@/domain/entities/Token.entity";
+import { Token } from "@/domain/entities/auth/Token.entity";
 import { TokenType } from "@/domain/entities/auth/TokenType.entity";
 import { Schema, model } from "mongoose";
 

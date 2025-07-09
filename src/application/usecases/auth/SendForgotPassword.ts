@@ -1,17 +1,17 @@
-import { TokenType } from "@/domain/entities/auth/TokenType.entity";
 import { BadRequest } from "@/domain/errors/BadRequest";
 import { NotFound } from "@/domain/errors/NotFound";
 import { Unauthorized } from "@/domain/errors/Unauthorized";
 import { TokenRepository } from "@/domain/repositories/auth/TokenRepository";
-import { UserRepository } from "@/domain/repositories/auth/UserRepository";
+import { AuthRepositorie } from "@/domain/repositories/auth/AuthRepositorie";
 import { SendEmailService } from "@/domain/services/EmailService";
-import { EmailTemplateService } from "@/domain/services/EmailTemplateService";
 import { Email } from "@/domain/value-objects/Email";
+import { TokenType } from "@/domain/entities/auth/TokenType.entity";
+import { EmailTemplateService } from "@/domain/services/EmailTemplateService";
 
 
 export class SendForgotPassword {
   constructor(
-    private readonly userRepository: UserRepository,
+    private readonly authRepository: AuthRepositorie,
     private readonly tokenRepository: TokenRepository,
     private readonly emailService: SendEmailService,
     private readonly emailTemplateService:EmailTemplateService,
@@ -21,7 +21,7 @@ export class SendForgotPassword {
   async execute(email: string) {
     try {
       const emailValidated = Email.create(email);
-      const user = await this.userRepository.findByEmail(emailValidated.getValue());
+      const user = await this.authRepository.findByEmail(emailValidated.getValue());
       if (!user) throw new NotFound("Usuario no encontrado");
       if (!user.isActive) throw new Unauthorized("Usuario no activo");
       if (user.isDeleted) throw new NotFound("Usuario no encontrado");

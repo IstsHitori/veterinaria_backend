@@ -1,13 +1,11 @@
-import { Role } from "./Role.entity";
+import { Role } from "../auth/Role.entity";
 
-
-export class User {
+export class UserSummary {
   constructor(
     public readonly id: string,
     public readonly firstName: string,
     public readonly lastName: string,
     public email: string,
-    public password: string,
     public role: Role,
     public emailValidated: boolean,
     public readonly createdAt: Date,
@@ -17,19 +15,4 @@ export class User {
     public readonly isActive: boolean = true,
     public readonly lastLogin: Date | null
   ) {}
-
-  confirmEmail(): void {
-    this.emailValidated = true;
-  }
-  updatePassword(passwordValidated: string): void {
-    this.password = passwordValidated;
-  }
-
-  updateEmail(emailValidated: string): void {
-    this.email = emailValidated;
-  }
-
-  updateRol(rolValidated: Role): void {
-    this.role = rolValidated;
-  }
 }

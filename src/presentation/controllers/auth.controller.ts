@@ -5,11 +5,8 @@ import { NextFunction, Request, Response } from "express";
 import { CreateUserDto } from "@/presentation/dtos/auth";
 import { validateOrReject } from "class-validator";
 import { Role } from "@/domain/entities/auth/Role.entity";
-import { BadRequest } from "@/domain/errors/BadRequest";
-import { NotFound } from "@/domain/errors/NotFound";
 import { ConfirmEmailDto } from "@/presentation/dtos/auth/ConfirmEmailDto";
 import { LoginUser } from "@/application/usecases/auth/LoginUser";
-import { Unauthorized } from "@/domain/errors/Unauthorized";
 import { SendForgotPassword } from "@/application/usecases/auth/SendForgotPassword";
 import { LoginUserDto } from "@/presentation/dtos/auth/LoginUserDto";
 import { SendForgotPasswordDto } from "../dtos/auth/SendForgotPasswordDto";
@@ -138,4 +135,5 @@ export class AuthController {
       next(error);
     }
   };
+
 }

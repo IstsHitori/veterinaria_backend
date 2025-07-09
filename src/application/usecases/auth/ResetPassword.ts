@@ -1,10 +1,10 @@
-import { TokenType } from "@/domain/entities/auth/TokenType.entity";
 import { BadRequest } from "@/domain/errors/BadRequest";
 import { NotFound } from "@/domain/errors/NotFound";
+import { AuthRepositorie } from "@/domain/repositories/auth/AuthRepositorie";
 import { TokenRepository } from "@/domain/repositories/auth/TokenRepository";
-import { UserRepository } from "@/domain/repositories/auth/UserRepository";
 import { PasswordEncrypter } from "@/domain/services/PasswordEncrypter";
 import { Password } from "@/domain/value-objects/Password";
+import { TokenType } from "@/domain/entities/auth/TokenType.entity";
 
 interface ResetPasswordProps {
   token: string;
@@ -14,7 +14,7 @@ interface ResetPasswordProps {
 
 export class ResetPassword {
   constructor(
-    private readonly userRepository: UserRepository,
+    private readonly authRepository: AuthRepositorie,
     private readonly tokenRepository: TokenRepository,
     private readonly passwordEncrypter: PasswordEncrypter
   ) {}
@@ -42,7 +42,7 @@ export class ResetPassword {
       if (foundToken.isExpired()) throw new BadRequest("Token expirado");
 
       //Validar si el usuario existe
-      const user = await this.userRepository.findById(foundToken.userId);
+      const user = await this.authRepository.findById(foundToken.userId);
       if (!user) throw new NotFound("Usuario no encontrado");
 
       //Validar si el usuario está activo
@@ -55,7 +55,7 @@ export class ResetPassword {
       );
 
       //Actualizar la contraseña
-      await this.userRepository.update(user.id, {
+      await this.authRepository.update(user.id, {
         password: encryptedPassword,
       });
     } catch (error) {

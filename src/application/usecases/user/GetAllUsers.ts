@@ -1,10 +1,10 @@
-import { UserRepository } from "@/domain/repositories/auth/UserRepository";
-import { User } from "@/domain/entities/auth/User.entity";
+import { UserSummary } from "@/domain/entities/user/UserSummary";
+import { UserRepositorie } from "@/domain/repositories/user/UserRepositorie";
 
 export class GetAllUsers {
-  constructor(private readonly userRepository: UserRepository) {}
+  constructor(private readonly userRepositorie: UserRepositorie) {}
 
-  async execute(): Promise<User[]> {
-    return await this.userRepository.getAllUsers();
+  async execute(): Promise<UserSummary[]> {
+    return await this.userRepositorie.getAllUsers();
   }
 }

@@ -1,11 +1,10 @@
 import { BadRequest } from "@/domain/errors/BadRequest";
-import { NotFound } from "@/domain/errors/NotFound";
 import { Unauthorized } from "@/domain/errors/Unauthorized";
-import { UserRepository } from "@/domain/repositories/auth/UserRepository";
+import { AuthRepositorie } from "@/domain/repositories/auth/AuthRepositorie";
 import { PasswordEncrypter } from "@/domain/services/PasswordEncrypter";
 import { TokenService } from "@/domain/services/TokenService";
-import { ResendConfirmationToken } from "./ResendConfirmationToken";
 import { Email } from "@/domain/value-objects/Email";
+import { ResendConfirmationToken } from "./ResendConfirmationToken";
 
 type LoginUserResult =
   | { status: "success"; token: string }
@@ -13,7 +12,7 @@ type LoginUserResult =
 
 export class LoginUser {
   constructor(
-    private readonly userRepository: UserRepository,
+    private readonly authRepository: AuthRepositorie,
     private readonly passwordEncrypter: PasswordEncrypter,
     private readonly tokenService: TokenService,
     private readonly resendConfirmationToken: ResendConfirmationToken
@@ -22,11 +21,11 @@ export class LoginUser {
     try {
       Email.create(email);
 
-      const user = await this.userRepository.findByEmail(email);
-      if (!user) throw new NotFound("Usuario no encontrado");
+      const user = await this.authRepository.findByEmail(email);
+      if (!user) throw new Unauthorized("Usuario no encontrado");
 
       if (!user.isActive) throw new Unauthorized("Usuario no activo");
-      if (user.isDeleted) throw new NotFound("Usuario no encontrado");
+      if (user.isDeleted) throw new Unauthorized("Usuario no encontrado");
 
       if (!user.emailValidated) {
         await this.resendConfirmationToken.execute(email);
@@ -47,9 +46,6 @@ export class LoginUser {
 
       return { status: "success", token };
     } catch (error) {
-      if (error instanceof NotFound) {
-        throw error;
-      }
       if (error instanceof Unauthorized) {
         throw error;
       }

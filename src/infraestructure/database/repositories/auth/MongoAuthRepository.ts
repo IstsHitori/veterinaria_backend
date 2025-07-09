@@ -1,17 +1,15 @@
-import { UserRepository } from "@/domain/repositories/auth/UserRepository";
-import { User } from "@/domain/entities/auth/User.entity";
 import { UserModel } from "../../models/User.model";
 import { BadRequest } from "@/domain/errors/BadRequest";
 import { PasswordEncrypter } from "@/domain/services/PasswordEncrypter";
 import { NotFound } from "@/domain/errors/NotFound";
 import { HydratedDocument } from "mongoose";
 import { Role } from "@/domain/entities/auth/Role.entity";
+import { AuthRepositorie } from "@/domain/repositories/auth/AuthRepositorie";
+import { User } from "@/domain/entities/user/User.entity";
 
-export class MongoUserRepository implements UserRepository {
+export class MongoAuthRepository implements AuthRepositorie {
   constructor(private readonly passwordEncrypter: PasswordEncrypter) {}
-  getAllUsers(): Promise<User[]> {
-    throw new Error("Method not implemented.");
-  }
+
   async canCreateAdmin(): Promise<boolean> {
     const adminCount = await UserModel.countDocuments({ role: Role.ADMIN });
     return adminCount === 0;
@@ -98,4 +96,5 @@ export class MongoUserRepository implements UserRepository {
       userCreated.lastLogin // lastLogin
     );
   }
+
 }

@@ -1,7 +1,7 @@
 import { BadRequest } from "@/domain/errors/BadRequest";
 import { NotFound } from "@/domain/errors/NotFound";
+import { AuthRepositorie } from "@/domain/repositories/auth/AuthRepositorie";
 import { TokenRepository } from "@/domain/repositories/auth/TokenRepository";
-import { UserRepository } from "@/domain/repositories/auth/UserRepository";
 import { TokenType } from "@/domain/entities/auth/TokenType.entity";
 
 export interface ConfirmEmailData {
@@ -10,7 +10,7 @@ export interface ConfirmEmailData {
 
 export class ConfirmEmail {
   constructor(
-    private readonly userRepository: UserRepository,
+    private readonly authRepository: AuthRepositorie,
     private readonly tokenRepository: TokenRepository
   ) {}
 
@@ -33,7 +33,7 @@ export class ConfirmEmail {
       }
 
       // 4. Buscar el usuario asociado al token
-      const user = await this.userRepository.findById(token.userId);
+      const user = await this.authRepository.findById(token.userId);
       if (!user) {
         throw new NotFound("Usuario no encontrado");
       }
@@ -43,7 +43,7 @@ export class ConfirmEmail {
         throw new BadRequest("El email ya está confirmado");
       }
       // 6. Actualizar el usuario para marcar el email como confirmado
-      await this.userRepository.update(user.id, {
+      await this.authRepository.update(user.id, {
         emailValidated: true,
       });
 

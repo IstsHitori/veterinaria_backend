@@ -1,7 +1,7 @@
 import { TokenType } from "@/domain/entities/auth/TokenType.entity";
 import { BadRequest } from "@/domain/errors/BadRequest";
 import { TokenRepository } from "@/domain/repositories/auth/TokenRepository";
-import { UserRepository } from "@/domain/repositories/auth/UserRepository";
+import { AuthRepositorie } from "@/domain/repositories/auth/AuthRepositorie";
 import { SendEmailService } from "@/domain/services/EmailService";
 import { ResendConfirmationToken } from "./ResendConfirmationToken";
 import { Email } from "@/domain/value-objects/Email";
@@ -18,7 +18,7 @@ type validateFieldsType = { email: string; password: string; rol: Role };
 
 export class RegisterUser {
   constructor(
-    private readonly userRepository: UserRepository,
+    private readonly authRepository: AuthRepositorie,
     private readonly emailService: SendEmailService,
     private readonly tokenRepository: TokenRepository,
     private readonly FRONT_URL: string,
@@ -47,7 +47,7 @@ export class RegisterUser {
     try {
       //Validar que solo haya un administrador
       if (user.role === Role.ADMIN) {
-        const canCreateAdmin = this.userRepository.canCreateAdmin();
+        const canCreateAdmin = this.authRepository.canCreateAdmin();
         if (!canCreateAdmin)
           throw new BadRequest("No se puede crear otro administrador.");
       }
@@ -64,7 +64,7 @@ export class RegisterUser {
       userEntity.updateRol(rol);
 
       //Buscar usuario por email
-      const userFound = await this.userRepository.findByEmail(userEntity.email);
+      const userFound = await this.authRepository.findByEmail(userEntity.email);
       if (userFound) {
         if (userFound.emailValidated)
           throw new BadRequest("El usuario ya existe");
@@ -73,7 +73,7 @@ export class RegisterUser {
         return { status: "resent" };
       }
       // Crear usuario
-      const userCreated = await this.userRepository.create(userEntity);
+      const userCreated = await this.authRepository.create(userEntity);
       // Crear token de confirmación
       const token = await this.tokenRepository.createToken({
         userId: userCreated.id,

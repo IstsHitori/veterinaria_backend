@@ -1,5 +1,5 @@
 import { Role } from "@/domain/entities/auth/Role.entity";
-import { User } from "@/domain/entities/User.entity";
+import { User } from "@/domain/entities/user/User.entity";
 import { Document, model, Schema } from "mongoose";
 
 const validRole = Object.values(Role);

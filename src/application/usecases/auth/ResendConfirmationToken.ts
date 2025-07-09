@@ -1,24 +1,23 @@
-import { TokenType } from "@/domain/entities/auth/TokenType.entity";
 import { BadRequest } from "@/domain/errors/BadRequest";
 import { NotFound } from "@/domain/errors/NotFound";
+import { AuthRepositorie } from "@/domain/repositories/auth/AuthRepositorie";
 import { TokenRepository } from "@/domain/repositories/auth/TokenRepository";
-import { UserRepository } from "@/domain/repositories/auth/UserRepository";
 import { SendEmailService } from "@/domain/services/EmailService";
 import { EmailTemplateService } from "@/domain/services/EmailTemplateService";
+import { TokenType } from "@/domain/entities/auth/TokenType.entity";
 
 export class ResendConfirmationToken {
   constructor(
-    private readonly userRepository: UserRepository,
+    private readonly authRepository: AuthRepositorie,
     private readonly tokenRepository: TokenRepository,
     private readonly emailService: SendEmailService,
-    private readonly emailTemplateService:EmailTemplateService,
+    private readonly emailTemplateService: EmailTemplateService,
     private readonly FRONT_URL: string
   ) {}
 
   async execute(email: string): Promise<void> {
     try {
-      console.log("email a reenviar", email);
-      const user = await this.userRepository.findByEmail(email);
+      const user = await this.authRepository.findByEmail(email);
       if (!user) {
         throw new NotFound("User not found");
       }

@@ -1,6 +1,7 @@
-import { User } from "@/domain/entities/auth/User.entity";
+import { User } from "@/domain/entities/user/User.entity";
 import { Unauthorized } from "@/domain/errors/Unauthorized";
-import { UserRepository } from "@/domain/repositories/auth/UserRepository";
+import { AuthRepositorie } from "@/domain/repositories/auth/AuthRepositorie";
+
 import { TokenService } from "@/domain/services/TokenService";
 import { NextFunction, Request, Response } from "express";
 
@@ -19,7 +20,7 @@ type TokenPayloadType = {
 export class Authenticate {
   constructor(
     private readonly jwtTokenService: TokenService,
-    private readonly userRepository: UserRepository
+    private readonly authRepositorie: AuthRepositorie
   ) {}
 
   async authenticate(req: Request, res: Response, next: NextFunction) {
@@ -32,7 +33,7 @@ export class Authenticate {
 
       const decoded = this.jwtTokenService.verify(token) as TokenPayloadType;
       if (typeof decoded === "object" && decoded.id) {
-        const user = await this.userRepository.findById(decoded.id);
+        const user = await this.authRepositorie.findById(decoded.id);
         if (!user) throw new Unauthorized("Token no válido");
         req.user = user;
       }

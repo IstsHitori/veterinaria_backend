@@ -1,5 +1,4 @@
 import { BcryptPasswordEncrypter } from "@/infraestructure/adapters/crypto/BcryptPasswordEncrypter";
-import { MongoUserRepository } from "@/infraestructure/database/repositories/auth/MongoUserRepository";
 import { NodemailerEmail } from "@/infraestructure/adapters/email/NodemailerEmail";
 import { envs } from "@/infraestructure/config/envs";
 import { MongoTokenRepository } from "@/infraestructure/database/repositories/auth/MongoTokenRepository";
@@ -13,10 +12,11 @@ import { SendForgotPassword } from "@/application/usecases/auth/SendForgotPasswo
 import { ValidateResetToken } from "@/application/usecases/auth/ValidateResetToken";
 import { ResetPassword } from "@/application/usecases/auth/ResetPassword";
 import { EmailsTemplates } from "../adapters/email/templates/emails.templates";
+import { MongoAuthRepository } from "../database/repositories/auth/MongoAuthRepository";
 
 //* Instancias de dependencias
 const passwordEncrypter = new BcryptPasswordEncrypter();
-const userRepository = new MongoUserRepository(passwordEncrypter);
+const userRepository = new MongoAuthRepository(passwordEncrypter);
 const emailService = new NodemailerEmail(
   envs.MAILER_SERVICE,
   envs.MAILER_EMAIL,
