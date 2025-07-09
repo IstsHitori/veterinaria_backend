@@ -5,6 +5,7 @@ import { UserRepository } from "@/domain/repositories/UserRepository";
 import { PasswordEncrypter } from "@/domain/services/PasswordEncrypter";
 import { TokenService } from "@/domain/services/TokenService";
 import { ResendConfirmationToken } from "./ResendConfirmationToken";
+import { Email } from "@/domain/value-objects/Email";
 
 type LoginUserResult =
   | { status: "success"; token: string }
@@ -19,6 +20,8 @@ export class LoginUser {
   ) {}
   async execute(email: string, password: string): Promise<LoginUserResult> {
     try {
+      Email.create(email);
+
       const user = await this.userRepository.findByEmail(email);
       if (!user) throw new NotFound("Usuario no encontrado");
 
@@ -53,7 +56,7 @@ export class LoginUser {
       if (error instanceof BadRequest) {
         throw error;
       }
-      console.log("error", error);  
+      console.log("error", error);
       throw new BadRequest("Error al iniciar sesión");
     }
   }

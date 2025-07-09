@@ -22,6 +22,8 @@ npm-debug.log*
 # Docker
 docker-compose.yaml
 
+mongo/
+
 # Coverage directory
 coverage/
 
