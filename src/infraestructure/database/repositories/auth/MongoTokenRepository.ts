@@ -1,10 +1,10 @@
-import { CreateTokenData } from "@/application/usecases/auth/CreateToken";
-import { Token } from "@/domain/entities/Token.entity";
-import { TokenRepository } from "@/domain/repositories/TokenRepository";
-import { TokenModel } from "../../models/Token.model";
+import { Token } from "@/domain/entities/auth/Token.entity";
+import { TokenRepository } from "@/domain/repositories/auth/TokenRepository";
 import { BadRequest } from "@/domain/errors/BadRequest";
 import { generateNumericToken } from "@/domain/utils/generateNumericToken";
 import { HydratedDocument } from "mongoose";
+import { TokenModel } from "../../models/Token.model";
+import { CreateTokenData } from "@/domain/interfaces/auth/token.interface";
 
 export class MongoTokenRepository implements TokenRepository {
   private toToken(token: HydratedDocument<Token>): Token {

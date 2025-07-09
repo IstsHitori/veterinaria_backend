@@ -1,11 +1,6 @@
-import { Token } from "@/domain/entities/Token.entity";
-import { TokenType } from "@/domain/entities/TokenType.entity";
-import { TokenRepository } from "@/domain/repositories/TokenRepository";
-
-export interface CreateTokenData {
-  userId: string;
-  type: TokenType;
-}
+import { Token } from "@/domain/entities/auth/Token.entity";
+import { CreateTokenData } from "@/domain/interfaces/auth/token.interface";
+import { TokenRepository } from "@/domain/repositories/auth/TokenRepository";
 
 export class CreateToken {
   constructor(private readonly tokenRepository: TokenRepository) {}

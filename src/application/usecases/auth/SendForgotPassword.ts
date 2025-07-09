@@ -1,9 +1,9 @@
-import { TokenType } from "@/domain/entities/TokenType.entity";
+import { TokenType } from "@/domain/entities/auth/TokenType.entity";
 import { BadRequest } from "@/domain/errors/BadRequest";
 import { NotFound } from "@/domain/errors/NotFound";
 import { Unauthorized } from "@/domain/errors/Unauthorized";
-import { TokenRepository } from "@/domain/repositories/TokenRepository";
-import { UserRepository } from "@/domain/repositories/UserRepository";
+import { TokenRepository } from "@/domain/repositories/auth/TokenRepository";
+import { UserRepository } from "@/domain/repositories/auth/UserRepository";
 import { SendEmailService } from "@/domain/services/EmailService";
 import { EmailTemplateService } from "@/domain/services/EmailTemplateService";
 import { Email } from "@/domain/value-objects/Email";

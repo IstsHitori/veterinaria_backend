@@ -1,4 +1,4 @@
-import { Role } from "../entities/Role.entity";
+import { Role } from "../../entities/auth/Role.entity";
 
 export interface RegisterUserData {
   firstName: string;

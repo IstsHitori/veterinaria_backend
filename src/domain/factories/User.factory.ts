@@ -1,7 +1,7 @@
-import { Role } from "@/domain/entities/Role.entity";
-import { User } from "@/domain/entities/User.entity";
+import { Role } from "@/domain/entities/auth/Role.entity";
+import { User } from "../entities/auth/User.entity";
 import { BadRequest } from "@/domain/errors/BadRequest";
-import { RegisterUserData } from "../interfaces/user.interfaces";
+import { RegisterUserData } from "../interfaces/auth/user.interfaces";
 
 export class UserFactory {
   static fromObject(obj: { [key: string]: any }): User {

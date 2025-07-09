@@ -1,5 +1,6 @@
 import { Role } from "./Role.entity";
 
+
 export class User {
   constructor(
     public readonly id: string,
@@ -13,7 +14,7 @@ export class User {
     public readonly updatedAt: Date | null,
     public readonly deletedAt: Date | null,
     public readonly isDeleted: boolean,
-    public readonly isActive: boolean,
+    public readonly isActive: boolean = true,
     public readonly lastLogin: Date | null
   ) {}
 
@@ -25,7 +26,7 @@ export class User {
   }
 
   updateEmail(emailValidated: string): void {
-    this.password = emailValidated;
+    this.email = emailValidated;
   }
 
   updateRol(rolValidated: Role): void {

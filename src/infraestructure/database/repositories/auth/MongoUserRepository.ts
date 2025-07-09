@@ -1,21 +1,23 @@
-import { UserRepository } from "@/domain/repositories/UserRepository";
-import { User } from "@/domain/entities/User.entity";
+import { UserRepository } from "@/domain/repositories/auth/UserRepository";
+import { User } from "@/domain/entities/auth/User.entity";
 import { UserModel } from "../../models/User.model";
 import { BadRequest } from "@/domain/errors/BadRequest";
 import { PasswordEncrypter } from "@/domain/services/PasswordEncrypter";
 import { NotFound } from "@/domain/errors/NotFound";
 import { HydratedDocument } from "mongoose";
-import { Role } from "@/domain/entities/Role.entity";
-import { RegisterUserData } from "@/domain/interfaces/user.interfaces";
+import { Role } from "@/domain/entities/auth/Role.entity";
 
 export class MongoUserRepository implements UserRepository {
   constructor(private readonly passwordEncrypter: PasswordEncrypter) {}
+  getAllUsers(): Promise<User[]> {
+    throw new Error("Method not implemented.");
+  }
   async canCreateAdmin(): Promise<boolean> {
     const adminCount = await UserModel.countDocuments({ role: Role.ADMIN });
     return adminCount === 0;
   }
 
-  async create(userData: RegisterUserData): Promise<User> {
+  async create(userData: User): Promise<User> {
     try {
       const hashedPassword = await this.passwordEncrypter.hash(
         userData.password

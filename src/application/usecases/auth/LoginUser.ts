@@ -1,7 +1,7 @@
 import { BadRequest } from "@/domain/errors/BadRequest";
 import { NotFound } from "@/domain/errors/NotFound";
 import { Unauthorized } from "@/domain/errors/Unauthorized";
-import { UserRepository } from "@/domain/repositories/UserRepository";
+import { UserRepository } from "@/domain/repositories/auth/UserRepository";
 import { PasswordEncrypter } from "@/domain/services/PasswordEncrypter";
 import { TokenService } from "@/domain/services/TokenService";
 import { ResendConfirmationToken } from "./ResendConfirmationToken";

@@ -1,8 +1,8 @@
 import { BadRequest } from "@/domain/errors/BadRequest";
 import { NotFound } from "@/domain/errors/NotFound";
-import { TokenRepository } from "@/domain/repositories/TokenRepository";
-import { UserRepository } from "@/domain/repositories/UserRepository";
-import { TokenType } from "@/domain/entities/TokenType.entity";
+import { TokenRepository } from "@/domain/repositories/auth/TokenRepository";
+import { UserRepository } from "@/domain/repositories/auth/UserRepository";
+import { TokenType } from "@/domain/entities/auth/TokenType.entity";
 
 export interface ConfirmEmailData {
   token: string;

@@ -1,5 +1,5 @@
 import { Token } from "@/domain/entities/Token.entity";
-import { TokenType } from "@/domain/entities/TokenType.entity";
+import { TokenType } from "@/domain/entities/auth/TokenType.entity";
 import { Schema, model } from "mongoose";
 
 const validTokenType = Object.values(TokenType);

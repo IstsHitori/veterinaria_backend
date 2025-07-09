@@ -4,7 +4,7 @@ import { plainToInstance } from "class-transformer";
 import { NextFunction, Request, Response } from "express";
 import { CreateUserDto } from "@/presentation/dtos/auth";
 import { validateOrReject } from "class-validator";
-import { Role } from "@/domain/entities/Role.entity";
+import { Role } from "@/domain/entities/auth/Role.entity";
 import { BadRequest } from "@/domain/errors/BadRequest";
 import { NotFound } from "@/domain/errors/NotFound";
 import { ConfirmEmailDto } from "@/presentation/dtos/auth/ConfirmEmailDto";

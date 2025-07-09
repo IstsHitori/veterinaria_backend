@@ -1,4 +1,4 @@
-import { Role } from "@/domain/entities/Role.entity";
+import { Role } from "@/domain/entities/auth/Role.entity";
 import { User } from "@/domain/entities/User.entity";
 import { Document, model, Schema } from "mongoose";
 

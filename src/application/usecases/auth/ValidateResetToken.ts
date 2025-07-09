@@ -1,7 +1,7 @@
-import { TokenType } from "@/domain/entities/TokenType.entity";
+import { TokenType } from "@/domain/entities/auth/TokenType.entity";
 import { BadRequest } from "@/domain/errors/BadRequest";
 import { NotFound } from "@/domain/errors/NotFound";
-import { TokenRepository } from "@/domain/repositories/TokenRepository";
+import { TokenRepository } from "@/domain/repositories/auth/TokenRepository";
 
 export class ValidateResetToken {
   constructor(private readonly tokenRepository: TokenRepository) {}

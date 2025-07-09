@@ -1,4 +1,4 @@
-import { Role } from "../entities/Role.entity";
+import { Role } from "../entities/auth/Role.entity";
 import { BadRequest } from "../errors/BadRequest";
 import { Unauthorized } from "../errors/Unauthorized";
 

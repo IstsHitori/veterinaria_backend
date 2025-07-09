@@ -1,17 +1,16 @@
-import { TokenType } from "@/domain/entities/TokenType.entity";
+import { TokenType } from "@/domain/entities/auth/TokenType.entity";
 import { BadRequest } from "@/domain/errors/BadRequest";
-import { TokenRepository } from "@/domain/repositories/TokenRepository";
-import { UserRepository } from "@/domain/repositories/UserRepository";
+import { TokenRepository } from "@/domain/repositories/auth/TokenRepository";
+import { UserRepository } from "@/domain/repositories/auth/UserRepository";
 import { SendEmailService } from "@/domain/services/EmailService";
-import { EmailsTemplates } from "@/infraestructure/adapters/email/templates/emails.templates";
 import { ResendConfirmationToken } from "./ResendConfirmationToken";
 import { Email } from "@/domain/value-objects/Email";
 import { Password } from "@/domain/value-objects/Password";
 import { UserRole } from "@/domain/value-objects/UserRole";
 import { Unauthorized } from "@/domain/errors/Unauthorized";
-import { RegisterUserData } from "@/domain/interfaces/user.interfaces";
+import { RegisterUserData } from "@/domain/interfaces/auth/user.interfaces";
 import { UserFactory } from "@/domain/factories/User.factory";
-import { Role } from "@/domain/entities/Role.entity";
+import { Role } from "@/domain/entities/auth/Role.entity";
 import { EmailTemplateService } from "@/domain/services/EmailTemplateService";
 
 type RegisterUserResult = { status: "created" } | { status: "resent" };
@@ -47,9 +46,11 @@ export class RegisterUser {
   async execute(user: RegisterUserData): Promise<RegisterUserResult> {
     try {
       //Validar que solo haya un administrador
-      const canCreateAdmin = this.userRepository.canCreateAdmin();
-      if (!canCreateAdmin)
-        throw new BadRequest("No se puede crear otro administrador.");
+      if (user.role === Role.ADMIN) {
+        const canCreateAdmin = this.userRepository.canCreateAdmin();
+        if (!canCreateAdmin)
+          throw new BadRequest("No se puede crear otro administrador.");
+      }
 
       const { email, password, rol } = this.validateFields(
         user.email,
@@ -72,7 +73,6 @@ export class RegisterUser {
         return { status: "resent" };
       }
       // Crear usuario
-      console.log("userEntity:", userEntity);
       const userCreated = await this.userRepository.create(userEntity);
       // Crear token de confirmación
       const token = await this.tokenRepository.createToken({
