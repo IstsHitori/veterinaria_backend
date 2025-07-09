@@ -19,6 +19,9 @@ logs/
 *.log
 npm-debug.log*
 
+# Docker
+docker-compose.yaml
+
 # Coverage directory
 coverage/
 
