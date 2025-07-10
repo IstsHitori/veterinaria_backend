@@ -46,8 +46,10 @@ export class RegisterUser {
   async execute(user: RegisterUserData): Promise<RegisterUserResult> {
     try {
       //Validar que solo haya un administrador
+      
       if (user.role === Role.ADMIN) {
-        const canCreateAdmin = this.authRepository.canCreateAdmin();
+        const canCreateAdmin = await this.authRepository.canCreateAdmin();
+        
         if (!canCreateAdmin)
           throw new BadRequest("No se puede crear otro administrador.");
       }
