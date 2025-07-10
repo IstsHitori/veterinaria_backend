@@ -70,17 +70,17 @@ export class MongoAuthRepository implements AuthRepositorie {
 
   async update(idUser: string, updateData: Partial<User>): Promise<User> {
     try {
-      const updatedUser = await UserModel.findByIdAndUpdate(
+      const userUpdate = await UserModel.findByIdAndUpdate(
         idUser,
         updateData,
         { new: true }
       );
 
-      if (!updatedUser) {
+      if (!userUpdate) {
         throw new NotFound("Usuario no encontrado");
       }
 
-      return updatedUser;
+      return userUpdate;
     } catch (error) {
       if (error instanceof NotFound) {
         throw error;

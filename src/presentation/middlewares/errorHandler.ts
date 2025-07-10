@@ -3,6 +3,7 @@ import { BadRequest } from "@/domain/errors/BadRequest";
 import { Unauthorized } from "@/domain/errors/Unauthorized";
 import { NotFound } from "@/domain/errors/NotFound";
 import { ValidationError } from "class-validator";
+import { DatabaseError } from "@/domain/errors/DatabaseError";
 
 export interface ErrorResponse {
   message: string;
@@ -89,6 +90,19 @@ export const errorHandler = (
   if (error instanceof NotFound) {
     errorResponse = {
       message: error.message,
+      statusCode: error.statusCode,
+    };
+    res.status(error.statusCode).json(errorResponse);
+    return;
+  }
+
+  // Errores de base de datos
+  if (error instanceof DatabaseError) {
+    // Loguea el error técnico completo para desarrolladores
+    console.error("DatabaseError:", error.originalError || error);
+
+    errorResponse = {
+      message: "Error interno de base de datos. Por favor, intente más tarde.",
       statusCode: error.statusCode,
     };
     res.status(error.statusCode).json(errorResponse);
