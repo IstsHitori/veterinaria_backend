@@ -1,14 +1,13 @@
-import { MongoUserSummaryRepository } from "@/infraestructure/database/repositories/user/MongoUserRepository";
 import { GetAllUsers } from "@/application/usecases/user/GetAllUsers";
+import { MongoUserRepository } from "../database/repositories/user/MongoUserRepository";
+import { UserController } from "@/presentation/controllers/user.controller";
 
-export const createUserControllerContainer = () => {
-  // Repositories
-  const userRepository = new MongoUserSummaryRepository();
+// Repositories
+const mongoUserRepository = new MongoUserRepository();
 
-  // Use cases
-  const getAllUsers = new GetAllUsers(userRepository);
+// use cases
+const getAllUsersUseCase = new GetAllUsers(mongoUserRepository);
 
-  return {
-    getAllUsers,
-  };
-}; 
+const userController = new UserController(getAllUsersUseCase);
+
+export { userController };

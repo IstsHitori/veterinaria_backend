@@ -1,9 +1,12 @@
 import { Router } from "express";
 import { authController } from "@/infraestructure/containers/auth-controller.container";
+import { authenticate } from "@/infraestructure/containers/authenticate.container";
 
 export class AuthRoutes {
   static get routes(): Router {
     const router = Router();
+
+    router.get("/", authenticate.authenticate, authController.getUserProfile);
 
     router.post("/register", authController.register);
     router.post("/confirm-email/:token", authController.confirmEmail);

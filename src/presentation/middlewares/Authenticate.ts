@@ -1,4 +1,4 @@
-import { User } from "@/domain/entities/user/User.entity";
+import { AuthUser } from "@/domain/entities/user/AuthUser";
 import { Unauthorized } from "@/domain/errors/Unauthorized";
 import { AuthRepositorie } from "@/domain/repositories/auth/AuthRepositorie";
 
@@ -8,7 +8,7 @@ import { NextFunction, Request, Response } from "express";
 declare global {
   namespace Express {
     interface Request {
-      user?: User;
+      user?: AuthUser;
     }
   }
 }
@@ -23,23 +23,24 @@ export class Authenticate {
     private readonly authRepositorie: AuthRepositorie
   ) {}
 
-  async authenticate(req: Request, res: Response, next: NextFunction) {
+  authenticate = async (req: Request, res: Response, next: NextFunction) => {
     try {
       const bearer = req.headers.authorization;
-      if (!bearer) throw new Unauthorized("No estás autorizado");
+      if (!bearer) throw new Unauthorized("No estás autenticado");
 
       const token = bearer.split(" ")[1];
       if (!token) throw new Unauthorized("Token no disponible");
-
+      
       const decoded = this.jwtTokenService.verify(token) as TokenPayloadType;
       if (typeof decoded === "object" && decoded.id) {
-        const user = await this.authRepositorie.findById(decoded.id);
+        const user = await this.authRepositorie.findByIdForAuth(decoded.id);
         if (!user) throw new Unauthorized("Token no válido");
+
         req.user = user;
       }
       next();
     } catch (error) {
       next(error);
     }
-  }
+  };
 }

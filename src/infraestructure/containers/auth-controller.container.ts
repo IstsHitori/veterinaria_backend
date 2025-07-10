@@ -13,10 +13,11 @@ import { ValidateResetToken } from "@/application/usecases/auth/ValidateResetTok
 import { ResetPassword } from "@/application/usecases/auth/ResetPassword";
 import { EmailsTemplates } from "../adapters/email/templates/emails.templates";
 import { MongoAuthRepository } from "../database/repositories/auth/MongoAuthRepository";
+import { GetProfile } from "@/application/usecases/auth/GetProfile";
 
 //* Instancias de dependencias
 const passwordEncrypter = new BcryptPasswordEncrypter();
-const userRepository = new MongoAuthRepository(passwordEncrypter);
+const authRepository = new MongoAuthRepository(passwordEncrypter);
 const emailService = new NodemailerEmail(
   envs.MAILER_SERVICE,
   envs.MAILER_EMAIL,
@@ -26,7 +27,7 @@ const emailService = new NodemailerEmail(
 const emailTemplates = new EmailsTemplates();
 const mongoTokenRepository = new MongoTokenRepository();
 const resendConfirmationToken = new ResendConfirmationToken(
-  userRepository,
+  authRepository,
   mongoTokenRepository,
   emailService,
   emailTemplates,
@@ -36,22 +37,22 @@ const tokenService = new JwtTokenService();
 
 //* Casos de uso
 const registerUser = new RegisterUser(
-  userRepository,
+  authRepository,
   emailService,
   mongoTokenRepository,
   envs.FRONT_URL,
   resendConfirmationToken,
   emailTemplates
 );
-const confirmEmail = new ConfirmEmail(userRepository, mongoTokenRepository);
+const confirmEmail = new ConfirmEmail(authRepository, mongoTokenRepository);
 const loginUser = new LoginUser(
-  userRepository,
+  authRepository,
   passwordEncrypter,
   tokenService,
   resendConfirmationToken
 );
 const sendForgotPassword = new SendForgotPassword(
-  userRepository,
+  authRepository,
   mongoTokenRepository,
   emailService,
   emailTemplates,
@@ -59,10 +60,11 @@ const sendForgotPassword = new SendForgotPassword(
 );
 const validateResetToken = new ValidateResetToken(mongoTokenRepository);
 const resetPassword = new ResetPassword(
-  userRepository,
+  authRepository,
   mongoTokenRepository,
   passwordEncrypter
 );
+const getProfile = new GetProfile(authRepository);
 
 //* Controlador
 const authController = new AuthController(
@@ -71,7 +73,8 @@ const authController = new AuthController(
   loginUser,
   sendForgotPassword,
   validateResetToken,
-  resetPassword
+  resetPassword,
+  getProfile
 );
 
 export { authController };

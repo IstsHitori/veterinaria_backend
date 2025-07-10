@@ -14,6 +14,7 @@ import { ValidateTokenPasswordDto } from "../dtos/auth/ValidateTokenPasswordDto"
 import { ValidateResetToken } from "@/application/usecases/auth/ValidateResetToken";
 import { ResetPassword } from "@/application/usecases/auth/ResetPassword";
 import { ResetPasswordDto } from "../dtos/auth/ResetPasswordDto";
+import { GetProfile } from "@/application/usecases/auth/GetProfile";
 
 export class AuthController {
   constructor(
@@ -22,7 +23,8 @@ export class AuthController {
     private readonly loginUserUseCase: LoginUser,
     private readonly sendForgotPasswordUseCase: SendForgotPassword,
     private readonly validateResetTokenUseCase: ValidateResetToken,
-    private readonly resetPasswordUseCase: ResetPassword
+    private readonly resetPasswordUseCase: ResetPassword,
+    private readonly getUserProfileUseCase: GetProfile
   ) {}
 
   login = async (req: Request, res: Response, next: NextFunction) => {
@@ -135,5 +137,17 @@ export class AuthController {
       next(error);
     }
   };
-
+  getUserProfile = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const user = req.user;
+      if (!user) {
+        res.status(401).json({ message: "No autenticado" });
+        return;
+      }
+      const profile = await this.getUserProfileUseCase.execute(user.id);
+      res.send({ profile });
+    } catch (error) {
+      next(error);
+    }
+  };
 }

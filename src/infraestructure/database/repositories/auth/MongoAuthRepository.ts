@@ -6,9 +6,21 @@ import { HydratedDocument } from "mongoose";
 import { Role } from "@/domain/entities/auth/Role.entity";
 import { AuthRepositorie } from "@/domain/repositories/auth/AuthRepositorie";
 import { User } from "@/domain/entities/user/User.entity";
+import { AuthUser } from "@/domain/entities/user/AuthUser";
 
 export class MongoAuthRepository implements AuthRepositorie {
   constructor(private readonly passwordEncrypter: PasswordEncrypter) {}
+  async findByIdForAuth(id: string): Promise<AuthUser | null> {
+    try {
+      const userFound = await UserModel.findById(id);
+      if (!userFound) {
+        throw new NotFound("No se encontró el usuario");
+      }
+      return this.toAuthUser(userFound);
+    } catch (error) {
+      throw new BadRequest("Error al buscar el usuario para autenticación");
+    }
+  }
 
   async canCreateAdmin(): Promise<boolean> {
     const adminCount = await UserModel.countDocuments({ role: Role.ADMIN });
@@ -55,6 +67,7 @@ export class MongoAuthRepository implements AuthRepositorie {
       throw new BadRequest("Error al buscar el usuario por id");
     }
   }
+
   async update(idUser: string, updateData: Partial<User>): Promise<User> {
     try {
       const updatedUser = await UserModel.findByIdAndUpdate(
@@ -97,4 +110,16 @@ export class MongoAuthRepository implements AuthRepositorie {
     );
   }
 
+  private toAuthUser(userCreated: HydratedDocument<User>): AuthUser {
+    return new AuthUser(
+      userCreated._id.toString(), // id
+      userCreated.firstName, // firstName
+      userCreated.lastName, // lastName
+      userCreated.email, // email
+      userCreated.role, // role
+      userCreated.emailValidated, // emailValidated
+      userCreated.createdAt, // createdAt
+      userCreated.updatedAt // updatedAt
+    );
+  }
 }
