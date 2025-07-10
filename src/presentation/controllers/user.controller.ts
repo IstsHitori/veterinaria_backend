@@ -9,7 +9,10 @@ export class UserController {
     try {
       const user = req.user;
       if (!user) throw new Unauthorized("No has iniciado sesión");
-      const usersSummary = await this.getAllUsersUseCase.execute(user.role);
+      const usersSummary = await this.getAllUsersUseCase.execute(
+        user.role,
+        user.id
+      );
       res.send({ users: usersSummary });
     } catch (error) {
       next(error);

@@ -7,11 +7,11 @@ import { UserRepositorie } from "@/domain/repositories/user/UserRepositorie";
 export class GetAllUsers {
   constructor(private readonly userRepositorie: UserRepositorie) {}
 
-  async execute(rol: Role): Promise<UserSummary[]> {
+  async execute(rol: Role,idUser:string): Promise<UserSummary[]> {
     try {
       if (!this.userRepositorie.isAdmin(rol))
         throw new Unauthorized("No tienes permiso para esta acción");
-      return await this.userRepositorie.getAllUsers();
+      return await this.userRepositorie.getAllUsers(idUser);
     } catch (error) {
       if (error instanceof Unauthorized) throw error;
       throw new BadRequest("Ha ocurrido un error al obtener los usuarios");

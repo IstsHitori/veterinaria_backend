@@ -7,7 +7,6 @@ export class AuthUser {
     public readonly lastName: string,
     public readonly email: string,
     public readonly role: Role,
-    public readonly emailValidated: boolean,
     public readonly createdAt: Date,
     public readonly updatedAt: Date | null
   ) {}

@@ -7,10 +7,12 @@ export class MongoUserRepository implements UserRepositorie {
   isAdmin(rol: Role): boolean {
     return rol === Role.ADMIN;
   }
-  async getAllUsers(): Promise<UserSummary[]> {
-    const users = await UserModel.find({ isDeleted: false })
-      .select("-password -__v")
-      .lean();
+  async getAllUsers(idUser: string): Promise<UserSummary[]> {
+    // Supongamos que tienes una variable llamada excludeId con el id que quieres excluir
+    // Por ejemplo: const excludeId = "id_a_excluir";
+    const users = await UserModel.find({ _id: { $ne: idUser } }).select(
+      "-password -__v"
+    );
 
     return users.map(
       (user) =>

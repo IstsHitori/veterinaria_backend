@@ -117,7 +117,6 @@ export class MongoAuthRepository implements AuthRepositorie {
       userCreated.lastName, // lastName
       userCreated.email, // email
       userCreated.role, // role
-      userCreated.emailValidated, // emailValidated
       userCreated.createdAt, // createdAt
       userCreated.updatedAt // updatedAt
     );
